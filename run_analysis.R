@@ -2,7 +2,7 @@
 # course code : getdata-010
 # author : @StefMT2970 
 # https://github.com/stefMT2970
-#
+# 
 # Reuse of dataset:
 # ==================================================================
 #   Human Activity Recognition Using Smartphones Dataset

@@ -142,7 +142,11 @@ tidy_data <- subset(tidy_data, select=-c(activityId, row, set))
 row.names(tidy_data) <- seq(1, nrow(tidy_data))
 ## cleanup some typo's in the remaining column headings of tidy_data
 ##    - make.names has inserted too many dots (in the middle and in the end) 
+##      (choice has been made to keep dots to improve readibility)
+##      (certainly the axial x,y,z would be hard to spot without dots)
 ##    - "Body" has been repeated a few times
+##    - turn all names to lowercase
+##
 ## put column headers in separate vector, then do the gsub's 
 tidy_names <- names(tidy_data)
 
@@ -154,6 +158,7 @@ tidy_names <- gsub(pattern = "gravityMean.$",
                    replacement = "gravityMean", x = tidy_names)
 tidy_names <- gsub(pattern = "Mean.gravity.$", 
                    replacement = "Mean.gravity", x = tidy_names)
+tidy_names <- tolower(tidy_names)
 
 ## now use tidy_names to give the tidy dataset improved variable names
 names(tidy_data) <- tidy_names
@@ -161,7 +166,7 @@ names(tidy_data) <- tidy_names
 # create a second, independent tidy data set with the average of 
 # each (numeric) variable for each activity and each subject.
 summary_data <- tidy_data %>% 
-                group_by(subjectId, activity) %>%
+                group_by(subjectid, activity) %>%
                 summarise_each(funs = "mean") %>%
                 as.data.frame
 

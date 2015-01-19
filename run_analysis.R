@@ -44,12 +44,12 @@ if(!file.exists("UCI_data.zip"))
 setwd("./UCI HAR Dataset")
 ## open "README.txt" in getwd() for details
 
-## Read the activity labels (what subjects were doing)
+## Read the activity labels (= what the subjects were doing)
 activities <- read.table(file = "./activity_labels.txt", 
                          sep = "",
                          stringsAsFactors = FALSE)
 
-## Read the feature labels (dataset header or column names)
+## Read the feature labels (= dataset header or column names)
 feature <- read.table(file = "./features.txt",
                       stringsAsFactors = FALSE)
 
@@ -76,7 +76,7 @@ test_subjects <- read.table(file = "./test/subject_test.txt",
                             stringsAsFactors = FALSE)
 
 # now we have raw data, let's give names to columns
-## start easy
+## start easy with the referenced files
 names(activities) <- c("activityId", "activity")
 names(feature) <- c("id", "feature")
 names(train_labels) <- "activityId"
@@ -84,7 +84,7 @@ names(train_subjects) <- "subjectId"
 names(test_labels) <- "activityId"
 names(test_subjects) <-  "subjectId"
 
-## now the data sets themselves
+## now the main data sets themselves
 ## first some cleanup of the feature names in feature data set
 ## get rid of () and use make.names to have format with dots
 feature$feature <- gsub( "\\(\\)", "", feature$feature)
@@ -135,15 +135,15 @@ tidy_train <- merge(x=activities, y= tidy_train)
 ## Bind the datasets
 tidy_data <- rbind(tidy_train, tidy_test)
 
-# # Recover ordering and drop unused temp variables
+## Recover ordering and drop unused temp variables
 tidy_data <- tidy_data[order(tidy_data$set, tidy_data$row), ]
 tidy_data <- subset(tidy_data, select=-c(activityId, row, set))
-## cleanup row.names
+## cleanup row.names in output
 row.names(tidy_data) <- seq(1, nrow(tidy_data))
-## cleanup some typo's in the remaining column headings of tidy_data)
+## cleanup some typo's in the remaining column headings of tidy_data
 ##    - make.names has inserted too many dots (in the middle and in the end) 
 ##    - "Body" has been repeated a few times
-## put names in separate vector, then do the gsub's 
+## put column headers in separate vector, then do the gsub's 
 tidy_names <- names(tidy_data)
 
 tidy_names <- gsub(pattern = "[..]+", 
@@ -159,7 +159,7 @@ tidy_names <- gsub(pattern = "Mean.gravity.$",
 names(tidy_data) <- tidy_names
 
 # create a second, independent tidy data set with the average of 
-# each variable for each activity and each subject.
+# each (numeric) variable for each activity and each subject.
 summary_data <- tidy_data %>% 
                 group_by(subjectId, activity) %>%
                 summarise_each(funs = "mean") %>%
